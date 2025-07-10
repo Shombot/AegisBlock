@@ -84,7 +84,11 @@ public class BlockNode {
 		
 		hash = BlockChain.hash(headerHash + bodyHash);
 		
-		System.out.println(hash);
+		if(BlockChain.ledger.size() == 0) {
+			header.setPtrRegular(this.getHashPointer()); //hash this block itself if this is the first one 
+		} else {
+			header.setPtrRegular(BlockChain.ledger.getLast().getHashPointer());
+		}
 	}
 
 	public BlockHeader getHeader() {
@@ -109,6 +113,10 @@ public class BlockNode {
 
 	public void setHash(String hash) {
 		this.hash = hash;
+	}
+	
+	public String getHashPointer() {
+		return this.getHash() + " " + this.toString();
 	}
 	
 	public Patient getPatient() {

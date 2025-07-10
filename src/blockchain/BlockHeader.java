@@ -24,7 +24,7 @@ public class BlockHeader {
 	*/
 	
 	//maybe add a link to the patient and hospital
-	private String ptrRegular;
+	private String ptrRegular; //hash | BlockNode.toString()
 	private CryptoData[] ZKPPatient;
 	private CryptoData[] ZKPHospital;
 	public Date date;

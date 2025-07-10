@@ -23,9 +23,6 @@ public class Researcher {
 	 * 
 	 * 
 	 * 
-	 * 
-	 * 
-	 * 
 	 * SECOND BLOCK (patient approves and signs off on the request)
 	 * we need a valid hash pointer pointing to the first block (directly above) that the researcher made to request the data
 	 * patient needs to sign this block using the SAME public key that the data is being forked from

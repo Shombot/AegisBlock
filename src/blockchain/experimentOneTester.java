@@ -13,10 +13,6 @@ public class experimentOneTester {
 		int numBlocks = 10; //number of blocks we are generating
 		
 		
-		//generate a random block for hashptrprevdata and hash it, rather than making it random 
-			//this is for experiment 1 only, can make a different setup for experiment 3 
-		//fix the ZKP OR and AND to make sure they work together //dont need to do this anymore
-		//chanmge blockchain ledger away from linked list (linked list has pointer to next, we need pointer to prev and not next)
 		for(int i = 0; i < numPatients; i++) {
 			BlockChain.patients.add(BlockChain.generatePatient());
 		}

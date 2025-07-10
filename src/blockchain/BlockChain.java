@@ -56,6 +56,10 @@ public class BlockChain {
         return new String(Hex.encode(hashBytes)); 
     }
 	
+	public static String hashPointer(BlockNode blockNode) {
+		return blockNode.getHash() + " " + blockNode.toString();
+	}
+	
 	// Encrypt a string and return Base64-encoded ciphertext using BouncyCastle Base64
     public static String publicKeyEncryption(String plaintext, PublicKey publicKey) throws NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException{
         byte[] encrypted = encryptWithPublicKey(plaintext.getBytes(StandardCharsets.UTF_8), publicKey);
@@ -202,8 +206,17 @@ public class BlockChain {
 		while(true) {
 			data = UUID.randomUUID().toString();
 			dataPtr = UUID.randomUUID().toString();
-			prevDataHashPtr = UUID.randomUUID().toString(); //not actually hashing previous block, this will be a random value for this testing
 			conditionsSeed = (int) (Math.random() * Integer.MAX_VALUE); //we will hash this to get the actual condition code.
+			
+			
+			//if this is the first block, generate random string. else, choose a random block and hash it.
+			if(ledger.size() == 0) {
+				prevDataHashPtr = UUID.randomUUID().toString();
+			} else {
+				int randomBlock = (int) (Math.random()) * (ledger.size());
+				prevDataHashPtr = ledger.get(randomBlock).getHashPointer();
+			}
+			
 
 			try {
 				blockNode = new BlockNode(hash(conditionsSeed.toString()), data, dataPtr, prevDataHashPtr);
@@ -211,7 +224,7 @@ public class BlockChain {
 					break;
 				}
 			} catch(Exception e) {
-				System.out.println("cant add blocknode " + e);
+				e.printStackTrace();
 				continue;
 			}
 		}
