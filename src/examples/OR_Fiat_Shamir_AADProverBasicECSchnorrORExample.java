@@ -256,7 +256,7 @@ public class OR_Fiat_Shamir_AADProverBasicECSchnorrORExample {
 		
 		CryptoData[] transcript = proof.proveFiatShamir(publicInputs, secrets, env);
 		
-		System.out.println(transcript[0]);
+		//System.out.println(transcript[0]);
 		
 		//out.writeObject(transcript);
 		//out.flush();

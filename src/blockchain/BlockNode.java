@@ -55,13 +55,13 @@ public class BlockNode {
 		n_patient = BlockChain.patients.size(); //patients is the OR
 		i_real_patient = (int) (Math.random() * n_patient);
 		
-		System.out.println(n_patient + " " + i_real_patient);
+		//System.out.println(n_patient + " " + i_real_patient);
 		CryptoData[] patientOr = OR_Fiat_Shamir_AADProverBasicECSchnorrORExample.prover(args, n_patient, i_real_patient);
 		key1[0] = new CryptoDataArray(patientOr);
 		
 		CryptoData[] patientAND = AND_Fiat_Shamir_AABProverBasicDLSchnorrANDExample.prover(args, 2); //AND	call;
 		key1[1] = new CryptoDataArray(patientAND);
-		System.out.println("patient proof works");
+		//System.out.println("patient proof works");
 		
 		
 		
@@ -69,15 +69,20 @@ public class BlockNode {
 		n_hospital = BlockChain.hospitals.size(); //hospitals is the OR
 		i_real_hospital = (int) (Math.random() * n_hospital);
 		
-		System.out.println(n_hospital + " " + i_real_hospital);
+		//System.out.println(n_hospital + " " + i_real_hospital);
 		CryptoData[] hospitalOr = OR_Fiat_Shamir_AADProverBasicECSchnorrORExample.prover(args, n_hospital, i_real_hospital);
 		key2[0] = new CryptoDataArray(hospitalOr);
 		
 		CryptoData[] hospitalAND = AND_Fiat_Shamir_AABProverBasicDLSchnorrANDExample.prover(args, 2);; //AND call;
 		key2[1] = new CryptoDataArray(hospitalAND);
-		System.out.println("hospital proof works");
+		//System.out.println("hospital proof works");
 		
 		header = new BlockHeader(key1, key2);
+		
+		
+		
+		
+		/*
 		
 		String headerHash = BlockChain.hash(header.toString());
 		String bodyHash = BlockChain.hash(body.toString());
@@ -88,7 +93,7 @@ public class BlockNode {
 			header.setPtrRegular(this.getHashPointer()); //hash this block itself if this is the first one 
 		} else {
 			header.setPtrRegular(BlockChain.ledger.getLast().getHashPointer());
-		}
+		} */
 	}
 
 	public BlockHeader getHeader() {

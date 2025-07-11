@@ -240,7 +240,7 @@ public class AND_Fiat_Shamir_AABProverBasicDLSchnorrANDExample {
 		
 		CryptoData[] transcript = proof.proveFiatShamir(publicInputs, secrets, env);
 		
-		System.out.println(transcript[0]);
+		//System.out.println(transcript[0]);
 		
 		return transcript;
 		

@@ -69,8 +69,8 @@ public class Patient {
         setPubKey(keyPair.getPublic());
         
         // You can then encode and store/use these keys as needed
-        System.out.println("Private Key Patient (Base64): " + privString);
-        System.out.println("Public Key Patient (Base64): " + pubString);
+        //System.out.println("Private Key Patient (Base64): " + privString);
+        //System.out.println("Public Key Patient (Base64): " + pubString);
     }
 	
 	public String generateStringFromSymmetricKey(SecretKey symmetricKey) {
