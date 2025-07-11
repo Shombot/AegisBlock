@@ -24,16 +24,27 @@ public class BlockHeader {
 	*/
 	
 	//maybe add a link to the patient and hospital
-	private String ptrRegular; //hash | BlockNode.toString()
-	private CryptoData[] ZKPPatient;
-	private CryptoData[] ZKPHospital;
+	public String ptrRegular; //hash | BlockNode.toString()
+	public CryptoData[] ZKPPatient;
+	public CryptoData[] ZKPHospital;
 	public Date date;
+	public int prevBlock;
+	public String patientSign;
+	public String hospitalSign; 
 
 	//There is no ptrRegular since we add this when we are mining
-	public BlockHeader(CryptoData[] ZKPPatient, CryptoData[] ZKPHospital) {
+		public BlockHeader(CryptoData[] ZKPPatient, CryptoData[] ZKPHospital, int prevBlock, String patientSign, String hospitalSign) {
+			this(ZKPPatient, ZKPHospital, prevBlock);
+			this.patientSign = patientSign;
+			this.hospitalSign = hospitalSign;
+		}
+	
+	//Does NOT sign for patients and hospitals
+	public BlockHeader(CryptoData[] ZKPPatient, CryptoData[] ZKPHospital, int prevBlock) {
 		this.ZKPPatient = ZKPPatient;
 		this.ZKPHospital = ZKPHospital;
 		date = new Date();
+		this.prevBlock = prevBlock;
 	}
 
 	public String getPtrRegular() {
@@ -66,5 +77,21 @@ public class BlockHeader {
 
 	public void setDate(Date date) {
 		this.date = date;
+	}
+	
+	public String getPatientSign() {
+		return patientSign;
+	}
+	
+	public void setPatientSign(String patientSign) {
+		this.patientSign = patientSign;
+	}
+	
+	public String getHospitalSign() {
+		return hospitalSign;
+	}
+	
+	public void sethospitalSign(String hospitalSign) {
+		this.hospitalSign = hospitalSign;
 	}
 }

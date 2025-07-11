@@ -1,6 +1,7 @@
 package blockchain;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import examples.AND_Fiat_Shamir_AABProverBasicDLSchnorrANDExample;
 import examples.OR_Fiat_Shamir_AADProverBasicECSchnorrORExample;
@@ -30,12 +31,15 @@ import zero_knowledge_proofs.CryptoData.CryptoDataArray;
 public class BlockNode {
 	private BlockHeader header;
 	private BlockBody body;
-	private String hash; //H(H(header) + H(body))
+	private String hash = null; //H(H(header) + H(body))
+	private String salt;
+	int prevBlock;
 	
-	public BlockNode(String conditionCodes, String data, String ptrData, String hashPtrPrevBlock) throws ClassNotFoundException, IOException, MultipleTrueProofException, NoTrueProofException, ArraySizesDoNotMatchException, InterruptedException {
+	public BlockNode(String conditionCodes, String data, String ptrData, String hashPtrPrevBlock, int prevBlock) throws ClassNotFoundException, IOException, MultipleTrueProofException, NoTrueProofException, ArraySizesDoNotMatchException, InterruptedException {
 		while(true) {
 			try {
 				body = new BlockBody(conditionCodes, data, ptrData, hashPtrPrevBlock);
+				this.prevBlock = prevBlock;
 				break;
 			} catch(Exception e) {
 				e.printStackTrace();
@@ -77,8 +81,11 @@ public class BlockNode {
 		key2[1] = new CryptoDataArray(hospitalAND);
 		//System.out.println("hospital proof works");
 		
-		header = new BlockHeader(key1, key2);
+		hash = getHash(); //makes sure the hash cannot be null
+		String patientSign = BlockChain.signData(hash, this.getPatient().getPrivKey());
+		String hospitalSign = BlockChain.signData(hash, this.getHospital().getPrivKey());
 		
+		header = new BlockHeader(key1, key2, prevBlock, patientSign, hospitalSign);
 		
 		
 		
@@ -113,15 +120,33 @@ public class BlockNode {
 	}
 
 	public String getHash() {
+		if(hash == null) {
+			hash = generateHashPointer();
+		}
 		return hash;
 	}
-
-	public void setHash(String hash) {
-		this.hash = hash;
-	}
 	
-	public String getHashPointer() {
-		return this.getHash() + " " + this.toString();
+	/*
+	 * Hash(n) = Hash(symK + ptr(data) + Hash(n - 1) + salt);
+	 */
+	public String generateHashPointer() {
+		if(hash != null) {
+			return hash;
+		}
+
+		String prevHashPtr;
+		if(prevBlock == -1) {
+			prevHashPtr = UUID.randomUUID().toString();
+		} else {
+			prevHashPtr = BlockChain.ledger.get(prevBlock).getHash(); 
+		}
+		
+		String preHash = this.getBody().getSymmetricString() + this.getBody().getPatient().getPtrData() + prevHashPtr;
+		salt = BlockChain.generateRandomSHA256();
+		String hash = preHash + salt;
+		
+		hash = BlockChain.hash(hash);
+		return hash;
 	}
 	
 	public Patient getPatient() {

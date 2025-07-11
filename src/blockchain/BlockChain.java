@@ -1,5 +1,6 @@
 package blockchain;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
@@ -10,6 +11,8 @@ import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.Signature;
+import java.security.SignatureException;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.UUID;
@@ -104,6 +107,41 @@ public class BlockChain {
         byte[] decryptedBytes = cipher.doFinal(decodedBytes);
         return new String(decryptedBytes, StandardCharsets.UTF_8);
     }
+
+    public static String signData(String message, PrivateKey privateKey) {
+        while (true) {
+            try {
+                Signature signature = Signature.getInstance("SHA256withRSA");
+                signature.initSign(privateKey);
+                signature.update(message.getBytes("UTF-8"));
+
+                byte[] digitalSignature = signature.sign();
+                return new String(Base64.encode(digitalSignature), "UTF-8");
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("Retrying signature generation...");
+                continue;
+            }
+        }
+    }
+    
+    public static boolean verifySignature(String message, String base64Signature, PublicKey publicKey) {
+        while (true) {
+            try {
+                Signature signature = Signature.getInstance("SHA256withRSA");
+                signature.initVerify(publicKey);
+                signature.update(message.getBytes("UTF-8"));
+
+                byte[] signatureBytes = Base64.decode(base64Signature.getBytes("UTF-8"));
+                return signature.verify(signatureBytes);
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("Retrying signature verification...");
+            }
+        }
+    }
+
+
     
     public static SecretKey symmetricKeyGenerator() throws NoSuchAlgorithmException, NoSuchProviderException {
 		KeyGenerator kg = KeyGenerator.getInstance("AES");
@@ -196,30 +234,34 @@ public class BlockChain {
 		}
 	}
 	
+	public static String generateRandomSHA256() {
+		Integer conditionsSeed = (int) (Math.random() * Integer.MAX_VALUE); //we will hash this to get the actual condition code.
+		return hash(conditionsSeed.toString());
+	}
+	
 	public BlockNode generateBlockNode() {
 		String data;
 		String dataPtr;
 		String prevDataHashPtr;
 		BlockNode blockNode;
-		Integer conditionsSeed;
+		int randomBlock = -1;
 		
 		while(true) {
 			data = UUID.randomUUID().toString();
 			dataPtr = UUID.randomUUID().toString();
-			conditionsSeed = (int) (Math.random() * Integer.MAX_VALUE); //we will hash this to get the actual condition code.
 			
 			
 			//if this is the first block, generate random string. else, choose a random block and hash it.
 			if(ledger.size() == 0) {
 				prevDataHashPtr = UUID.randomUUID().toString();
 			} else {
-				int randomBlock = (int) (Math.random()) * (ledger.size());
-				prevDataHashPtr = ledger.get(randomBlock).getHashPointer();
+				randomBlock = (int) (Math.random()) * (ledger.size());
+				prevDataHashPtr = ledger.get(randomBlock).getHash();
 			}
 			
 
 			try {
-				blockNode = new BlockNode(hash(conditionsSeed.toString()), data, dataPtr, prevDataHashPtr);
+				blockNode = new BlockNode(generateRandomSHA256(), data, dataPtr, prevDataHashPtr, randomBlock);
 				if(ledger.add(blockNode)) {
 					break;
 				}

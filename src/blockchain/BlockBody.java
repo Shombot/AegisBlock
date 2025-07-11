@@ -49,6 +49,7 @@ public class BlockBody {
 	private SecretKey symmetricKey;
 	private String symmetricString;
 	private String conditionCodes; //256 bit string, which when represented as binary, each 1 signifies the patient has a condition that the specific bit represents
+	private String hashPrevPatient;
 	
 	public BlockBody(String conditionCodes, String data, String ptrData, String hashPtrPrevBlock) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeyException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
 		setConditionCodes(conditionCodes);
@@ -161,5 +162,13 @@ public class BlockBody {
 
 	public void setConditionCodes(String conditionCodes) {
 		this.conditionCodes = conditionCodes;
+	}
+
+	public String getHashPrevPatient() {
+		return hashPrevPatient;
+	}
+
+	public void setHashPrevPatient(String hashPrevPatient) {
+		this.hashPrevPatient = hashPrevPatient;
 	}
 }
