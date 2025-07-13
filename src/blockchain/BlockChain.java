@@ -36,6 +36,8 @@ public class BlockChain {
 	public static final HashSet<Patient> patients = new HashSet<>();
 	public static final HashSet<Hospital> hospitals = new HashSet<>();
 	public static LinkedList<BlockNode> ledger = new LinkedList<>();
+	public static int numPatients;
+	public static int numHospitals;
 	
 	public BlockChain(int n) {
 		for(int i = 0; i < n; i++) {
@@ -249,15 +251,16 @@ public class BlockChain {
 		while(true) {
 			data = UUID.randomUUID().toString();
 			dataPtr = UUID.randomUUID().toString();
+			prevDataHashPtr = UUID.randomUUID().toString();
 			
-			
+			/*
 			//if this is the first block, generate random string. else, choose a random block and hash it.
 			if(ledger.size() == 0) {
 				prevDataHashPtr = UUID.randomUUID().toString();
 			} else {
 				randomBlock = (int) (Math.random()) * (ledger.size());
 				prevDataHashPtr = ledger.get(randomBlock).getHash();
-			}
+			}*/ //manually hashing random previous block
 			
 
 			try {

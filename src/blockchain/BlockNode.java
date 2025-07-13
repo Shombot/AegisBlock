@@ -56,7 +56,7 @@ public class BlockNode {
 		CryptoData[] key2 = new CryptoDataArray[2];
 		
 		//patient proof
-		n_patient = BlockChain.patients.size(); //patients is the OR
+		n_patient = BlockChain.numPatients; //patients is the OR
 		i_real_patient = (int) (Math.random() * n_patient);
 		
 		//System.out.println(n_patient + " " + i_real_patient);
@@ -70,7 +70,7 @@ public class BlockNode {
 		
 		
 		//hospital proof
-		n_hospital = BlockChain.hospitals.size(); //hospitals is the OR
+		n_hospital = BlockChain.numHospitals; //hospitals is the OR
 		i_real_hospital = (int) (Math.random() * n_hospital);
 		
 		//System.out.println(n_hospital + " " + i_real_hospital);
