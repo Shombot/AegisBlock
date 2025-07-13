@@ -6,8 +6,8 @@ import java.util.UUID;
 public class experimentOneTester {
 	public static void main(String[] args) {
 		long startExperiment = System.nanoTime();
-		int numHospitals = 10;
-		int numPatients = 10;
+		int numHospitals = 2000;
+		int numPatients = 10000;
 		int numBlocks = 1; //number of blocks we are generating
 		
 		for(int i = 0; i < numHospitals; i++) {
