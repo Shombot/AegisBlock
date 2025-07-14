@@ -1,8 +1,8 @@
 #!/bin/bash --login
 
 #SBATCH --time=1-00:00:00   # walltime 24hr
-#SBATCH --ntasks-per-node=2 # number of processor cores (i.e. tasks)
-#SBATCH --nodes=1   # number of nodes
+#SBATCH --ntasks-per-node=4 # number of processor cores (i.e. tasks)
+#SBATCH --nodes=2   # number of nodes
 #SBATCH --mem=64G   # memory per CPU core
 #SBATCH --gres=gpu:0 # number of GPUs per node
 #SBATCH -J "test_script"   # job name
@@ -13,5 +13,4 @@ export OMP_NUM_THREADS=$SLURM_CPUS_ON_NODE
 
 # LOAD MODULES, INSERT CODE, AND RUN YOUR PROGRAMS HERE
 module load openjdk/24.0.1
-javac # input code you want to compile
-java ../src/blockchain/experimentOneTester.java # run code
+java -jar ab-7-14.jar # input code you want to compile

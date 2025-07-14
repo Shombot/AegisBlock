@@ -1,5 +1,11 @@
 package blockchain;
 
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.util.ArrayList;
+
+import org.bouncycastle.util.encoders.Base64;
+
 public class Researcher {
 	/*
 	 * no need to worry aobut the ZKP, its taking too much time
@@ -66,4 +72,53 @@ public class Researcher {
 	 * give the symK unlocks everything (for the main block they forked)
 	 * 
 	*/
+	
+	/*public PublicKey pubKey;
+	public String pubString;
+	public PrivateKey privKey;
+	public String privString;
+	public ArrayList<ResearcherBlockOne> requests;
+	
+	
+	public String generateStringFromPublicKey(PublicKey pubKey) {
+		return new String(Base64.encode(pubKey.getEncoded())); 
+	}
+	
+	public String generateStringFromPrivateKey(PrivateKey privKey) {
+		return new String(Base64.encode(privKey.getEncoded()));
+	}
+	
+	public PublicKey getPubKey() {
+        return pubKey;
+    }
+
+    public void setPubKey(PublicKey pubKey) {
+        this.pubKey = pubKey;
+        setPubString(generateStringFromPublicKey(pubKey)); //makes sure the string is always updated
+    }
+
+    public String getPubString() {
+        return pubString;
+    }
+
+    public void setPubString(String pubString) {
+        this.pubString = pubString;
+    }
+
+    public PrivateKey getPrivKey() {
+        return privKey;
+    }
+
+    public void setPrivKey(PrivateKey privKey) {
+        this.privKey = privKey;
+        setPrivString(generateStringFromPrivateKey(privKey)); //makes sure the string is always updated
+    }
+
+    public String getPrivString() {
+        return privString;
+    }
+
+    public void setPrivString(String privString) {
+        this.privString = privString;
+    }	*/
 }

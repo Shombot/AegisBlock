@@ -1,13 +1,9 @@
 package blockchain;
 
-import java.io.IOException;
 import java.util.UUID;
 
 import examples.AND_Fiat_Shamir_AABProverBasicDLSchnorrANDExample;
 import examples.OR_Fiat_Shamir_AADProverBasicECSchnorrORExample;
-import zero_knowledge_proofs.ArraySizesDoNotMatchException;
-import zero_knowledge_proofs.MultipleTrueProofException;
-import zero_knowledge_proofs.NoTrueProofException;
 import zero_knowledge_proofs.CryptoData.CryptoData;
 import zero_knowledge_proofs.CryptoData.CryptoDataArray;
 
@@ -35,7 +31,7 @@ public class BlockNode {
 	private String salt;
 	int prevBlock;
 	
-	public BlockNode(String conditionCodes, String data, String ptrData, String hashPtrPrevBlock, int prevBlock) throws ClassNotFoundException, IOException, MultipleTrueProofException, NoTrueProofException, ArraySizesDoNotMatchException, InterruptedException {
+	public BlockNode(String conditionCodes, String data, String ptrData, String hashPtrPrevBlock, int prevBlock) throws Exception {
 		while(true) {
 			try {
 				body = new BlockBody(conditionCodes, data, ptrData, hashPtrPrevBlock);
@@ -60,7 +56,7 @@ public class BlockNode {
 		i_real_patient = (int) (Math.random() * n_patient);
 		
 		//System.out.println(n_patient + " " + i_real_patient);
-		CryptoData[] patientOr = OR_Fiat_Shamir_AADProverBasicECSchnorrORExample.prover(args, n_patient, i_real_patient);
+		CryptoData[] patientOr = OR_Fiat_Shamir_AADProverBasicECSchnorrORExample.prover(n_patient, i_real_patient);
 		key1[0] = new CryptoDataArray(patientOr);
 		
 		CryptoData[] patientAND = AND_Fiat_Shamir_AABProverBasicDLSchnorrANDExample.prover(args, 2); //AND	call;
@@ -74,7 +70,7 @@ public class BlockNode {
 		i_real_hospital = (int) (Math.random() * n_hospital);
 		
 		//System.out.println(n_hospital + " " + i_real_hospital);
-		CryptoData[] hospitalOr = OR_Fiat_Shamir_AADProverBasicECSchnorrORExample.prover(args, n_hospital, i_real_hospital);
+		CryptoData[] hospitalOr = OR_Fiat_Shamir_AADProverBasicECSchnorrORExample.prover(n_hospital, i_real_hospital);
 		key2[0] = new CryptoDataArray(hospitalOr);
 		
 		CryptoData[] hospitalAND = AND_Fiat_Shamir_AABProverBasicDLSchnorrANDExample.prover(args, 2);; //AND call;

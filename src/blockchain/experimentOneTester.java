@@ -6,12 +6,12 @@ import java.util.UUID;
 public class experimentOneTester {
 	public static void main(String[] args) {
 		long startExperiment = System.nanoTime();
-		int numHospitals = 6000;
-		int numPatients = 100000;
+		int numHospitals = 6_000;
+		int numPatients = 10_000_000;
 		int numBlocks = 1; //number of blocks we are generating
 		
 		
-		//takes generates about 3000 a second, doing the 50M test case would take about 5 hours
+		//takes generates about 3000 a second, doing the 50M test case would take about 5 hours. overhead now is less than a second
 		//earlier when generating blocks manually, it could do about 13 a second, or about 5-6 weeks (1200 hours)
 		BlockChain.numHospitals = numHospitals;
 		BlockChain.numPatients = numPatients;
