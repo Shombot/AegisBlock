@@ -25,7 +25,7 @@ public class Researcher {
 	 * end date is not after the patient block that got forked
 	 * verify that signature is valid, and the public key is a part of the list of approved researchers
 	 * 
-	 * 
+	 * hospitals sign the first block when it gets added
 	 * 
 	 * 
 	 * 
@@ -37,10 +37,10 @@ public class Researcher {
 	 * 
 	 * 
 	 * 
+	 * there is no third block, the hospitals sign the second block (patient approval) when it gets added on
 	 * 
 	 * 
-	 * 
-	 * 
+	 * NO THIRD BLOCK, THIS IS AN INTERMEDIATE STEP DONE IN THE OTHER TWO PRIOR BLOCKS
 	 * THIRD BLOCK (hospitals giving researchers access)
 	 * patient signature is valid (from legitimate patient, and that the 
 	 * 		patient matches the one from the data block, and patient hash pointer points to a valid researcher request for their own block)
@@ -73,11 +73,14 @@ public class Researcher {
 	 * 
 	*/
 	
-	/*public PublicKey pubKey;
+	public PublicKey pubKey;
 	public String pubString;
 	public PrivateKey privKey;
 	public String privString;
-	public ArrayList<ResearcherBlockOne> requests;
+	public ArrayList<ResearcherBlockOne> firstBlocks; //only focus on the one, 
+	public ArrayList<ResearcherBlockTwo> secondBlocks;
+	public ArrayList<ResearcherBlockThree> thirdBlocks;
+	public ArrayList<ResearcherBlockFour> fourthBlocks;
 	
 	
 	public String generateStringFromPublicKey(PublicKey pubKey) {
@@ -120,5 +123,5 @@ public class Researcher {
 
     public void setPrivString(String privString) {
         this.privString = privString;
-    }	*/
+    }
 }
