@@ -80,7 +80,6 @@ public class Researcher {
 	public ArrayList<ResearcherBlockOne> firstBlocks; //only focus on the one, 
 	public ArrayList<ResearcherBlockTwo> secondBlocks;
 	public ArrayList<ResearcherBlockThree> thirdBlocks;
-	public ArrayList<ResearcherBlockFour> fourthBlocks;
 	
 	
 	public String generateStringFromPublicKey(PublicKey pubKey) {
