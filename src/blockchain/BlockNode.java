@@ -1,5 +1,6 @@
 package blockchain;
 
+import java.util.Date;
 import java.util.UUID;
 
 import examples.AND_Fiat_Shamir_AABProverBasicDLSchnorrANDExample;
@@ -159,5 +160,33 @@ public class BlockNode {
 	
 	public void setHospital(Hospital hospital) {
 		getBody().setHospital(hospital);
+	}
+	
+	public Date getDate() {
+		return header.getDate();
+	}
+	
+	public void setDate(Date date) {
+		header.setDate(date);
+	}
+
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
+
+	public int getPrevBlock() {
+		return prevBlock;
+	}
+
+	public void setPrevBlock(int prevBlock) {
+		this.prevBlock = prevBlock;
+	}
+
+	public void setHash(String hash) {
+		this.hash = hash;
 	}
 }

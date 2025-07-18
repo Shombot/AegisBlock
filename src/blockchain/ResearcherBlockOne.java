@@ -8,21 +8,66 @@ import org.bouncycastle.util.encoders.Base64;
 public class ResearcherBlockOne {
 	public BlockNode patientBlock;
 	public Date date;
+	public Researcher researcher;
 	public PublicKey researcherKey;
 	public String researcherString;
+	public Patient patient;
 	public PublicKey patientKey;
 	public String patientString;
 	public int blocksBefore;
 	public int blocksAfter;
+	public int numBlocks;
 	public String signature; //researcher signature on patient block
 	
-	public ResearcherBlockOne(PublicKey researcher, BlockNode patientBlock, int blocksBefore, int blocksAfter) {
+	/*
+	 * Make sure to manually add this block to the researcher firstBlocks list
+	 */
+	public ResearcherBlockOne(Researcher researcher, BlockNode patientBlock, int blocksBefore, int blocksAfter) {
+		date = new Date();
 		this.patientBlock = patientBlock;
-		setResearcherKey(researcher);
-		setPatientKey(patientBlock.getPatient().getPubKey());
+		setResearcher(researcher);
+		setPatient(patientBlock.getPatient());
 		this.blocksBefore = blocksBefore;
 		this.blocksAfter = blocksAfter;
-		//add signature and date
+		this.numBlocks = this.blocksAfter + this.blocksBefore + 1;
+		signature = BlockChain.signData(this.patientBlock.toString(), researcher.getPrivKey());
+	}
+	
+	public static boolean verifyBlockOne(ResearcherBlockOne blockOne) {
+		if(!blockOne.getPatient().equals(blockOne.getPatientBlock().getPatient())) {
+			System.out.println("Patients do not match on block 1 and patient block");
+			return false;
+		}
+		
+		if(!BlockChain.verifySignature(blockOne.getPatientBlock().toString(), blockOne.getSignature(), blockOne.getResearcherKey())) {
+			System.out.println("Signatures do not match on block 1 and patient block");
+			return false;
+		}
+		
+		if(blockOne.getBlocksAfter() < 0 || blockOne.getBlocksBefore() < 0 || blockOne.getPatientBlock().getDate().compareTo(blockOne.getDate()) > 0) {
+			System.out.println("Blocks after or before is negative, or blockOne is created before patient block");
+			return false;
+		}
+		
+		return true;
+	}
+
+	public Researcher getResearcher() {
+		return researcher;
+	}
+
+	public void setResearcher(Researcher researcher) {
+		this.researcher = researcher;
+		setResearcherKey(this.researcher.getPubKey()); //sets string as well
+	}
+
+	public Patient getPatient() {
+		return patient;
+	}
+
+	public void setPatient(Patient patient) {
+		this.patient = patient;
+		setPatientKey(this.patient.getPubKey()); //sets string as well
 	}
 	
 	public String generateStringFromPublicKey(PublicKey pubKey) {
@@ -46,7 +91,7 @@ public class ResearcherBlockOne {
 	}
 
 	public PublicKey getResearcherKey() {
-		return researcherKey;
+		return researcher.getPubKey();
 	}
 
 	public void setResearcherKey(PublicKey researcherKey) {
@@ -55,10 +100,10 @@ public class ResearcherBlockOne {
 	}
 
 	public String getResearcherString() {
-		return researcherString;
+		return generateStringFromPublicKey(researcher.getPubKey());
 	}
 
-	public void setResearcherString(String researcherString) {
+	private void setResearcherString(String researcherString) {
 		this.researcherString = researcherString;
 	}
 
@@ -72,10 +117,10 @@ public class ResearcherBlockOne {
 	}
 
 	public String getPatientString() {
-		return patientString;
+		return generateStringFromPublicKey(patient.getPubKey());
 	}
 
-	public void setPatientString(String patientString) {
+	private void setPatientString(String patientString) {
 		this.patientString = patientString;
 	}
 
@@ -93,6 +138,14 @@ public class ResearcherBlockOne {
 
 	public void setBlocksAfter(int blocksAfter) {
 		this.blocksAfter = blocksAfter;
+	}
+
+	public int getNumBlocks() {
+		return numBlocks;
+	}
+
+	public void setNumBlocks(int numBlocks) {
+		this.numBlocks = numBlocks;
 	}
 
 	public String getSignature() {

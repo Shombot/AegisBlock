@@ -122,7 +122,7 @@ public class Patient {
         return pubString;
     }
 
-    public void setPubString(String pubString) {
+    private void setPubString(String pubString) {
         this.pubString = pubString;
     }
 
@@ -139,7 +139,7 @@ public class Patient {
         return privString;
     }
 
-    public void setPrivString(String privString) {
+    private void setPrivString(String privString) {
         this.privString = privString;
     }
     

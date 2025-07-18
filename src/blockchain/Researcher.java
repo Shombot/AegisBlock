@@ -1,7 +1,11 @@
 package blockchain;
 
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 
 import org.bouncycastle.util.encoders.Base64;
@@ -81,6 +85,15 @@ public class Researcher {
 	public ArrayList<ResearcherBlockTwo> secondBlocks;
 	public ArrayList<ResearcherBlockThree> thirdBlocks;
 	
+	public Researcher() {
+		KeyPair kg = BlockChain.genKeys();
+		setPubKey(kg.getPublic());
+		setPrivKey(kg.getPrivate());
+		firstBlocks = new ArrayList<>();
+		secondBlocks = new ArrayList<>();
+		thirdBlocks = new ArrayList<>();
+	}
+	
 	
 	public String generateStringFromPublicKey(PublicKey pubKey) {
 		return new String(Base64.encode(pubKey.getEncoded())); 
@@ -123,4 +136,28 @@ public class Researcher {
     public void setPrivString(String privString) {
         this.privString = privString;
     }
+    
+    public ArrayList<ResearcherBlockOne> getFirstBlocks() {
+		return firstBlocks;
+	}
+
+	public void setFirstBlocks(ArrayList<ResearcherBlockOne> firstBlocks) {
+		this.firstBlocks = firstBlocks;
+	}
+
+	public ArrayList<ResearcherBlockTwo> getSecondBlocks() {
+		return secondBlocks;
+	}
+
+	public void setSecondBlocks(ArrayList<ResearcherBlockTwo> secondBlocks) {
+		this.secondBlocks = secondBlocks;
+	}
+
+	public ArrayList<ResearcherBlockThree> getThirdBlocks() {
+		return thirdBlocks;
+	}
+
+	public void setThirdBlocks(ArrayList<ResearcherBlockThree> thirdBlocks) {
+		this.thirdBlocks = thirdBlocks;
+	}
 }
