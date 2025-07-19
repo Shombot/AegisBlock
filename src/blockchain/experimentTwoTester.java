@@ -8,11 +8,9 @@ public class experimentTwoTester {
 		int numHospitals = 5;
 		int numPatients = 5;
 		int blocksBefore = 10;
-		int blockIndex = blocksBefore;
-		int blocksAfter = 9;
+		int blocksAfter = 89;
 		int numBlocks = blocksBefore + blocksAfter + 1;
 		int numNodes = 12000;
-		int numThreads = 200;
 		NetworkSimulator verificationOne = new NetworkSimulator();
 		NetworkSimulator verificationTwo = new NetworkSimulator();
 		
@@ -25,16 +23,16 @@ public class experimentTwoTester {
 		
 		System.gc();
 		long startResearcherAccess = System.nanoTime();
-		ResearcherBlockOne blockOne = new ResearcherBlockOne(researcher, BlockChain.ledger.get(blockIndex), blocksBefore, blocksAfter);
+		ResearcherBlockOne blockOne = new ResearcherBlockOne(researcher, BlockChain.ledger.get(blocksBefore), blocksBefore, blocksAfter);
 		researcher.firstBlocks.add(blockOne);
 		
-		verificationOne.setupNodes(numNodes, numThreads);
+		verificationOne.setupNodes(numNodes);
 		verificationOne.simulateVerifyBlockOne(blockOne);
 		
 		ResearcherBlockTwo blockTwo = new ResearcherBlockTwo(blockOne, blocksBefore, blocksAfter);
 		researcher.secondBlocks.add(blockTwo);
 		
-		verificationTwo.setupNodes(numNodes, numThreads);
+		verificationTwo.setupNodes(numNodes);
 		verificationTwo.simulateVerifyBlockTwo(blockTwo);
 		
 		BlockNode[] blocksArr = new BlockNode[blockTwo.getNumBlocks()];
@@ -51,8 +49,8 @@ public class experimentTwoTester {
 		double elapsedResearcherAccess = (end - startResearcherAccess) / 1000000000.0;
 		double elapsedExperiment = (end - startExperiment) / 1000000000.0;
 		
-		System.out.println("The researcher access process for encrypting " + numBlocks + " blocks with " + numNodes + " hospitals in the system with " + 
-				numThreads + " threads is " + elapsedResearcherAccess + " seconds, while the whole experiment took " + elapsedExperiment + " seconds.");
+		System.out.println("The researcher access process for encrypting " + numBlocks + " blocks with " + numNodes + " hospitals in the system is "
+				+ elapsedResearcherAccess + " seconds, while the whole experiment took " + elapsedExperiment + " seconds.");
 		
 		/*
 		 * long startExperiment = System.nanoTime();

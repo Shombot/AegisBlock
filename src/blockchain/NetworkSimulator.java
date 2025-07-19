@@ -19,7 +19,7 @@ public class NetworkSimulator {
     private final AtomicInteger completedCount = new AtomicInteger(0);
     private final List<Long> completionTimes = Collections.synchronizedList(new ArrayList<>());
 
-    public void setupNodes(int numNodes, int numThreads) {
+    public void setupNodes(int numNodes) {
     	NUM_NODES = numNodes;
     	THRESHOLD = numNodes / 2;
     	executor = Executors.newCachedThreadPool(); // dynamically creates threads as needed
@@ -81,7 +81,7 @@ public class NetworkSimulator {
                     }
 
                     try {
-                        Thread.sleep(rand.nextInt(5)); // simulate delay
+                    	Thread.sleep(rand.nextInt(30) + 60); // simulate delay
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                     }
@@ -154,7 +154,7 @@ public class NetworkSimulator {
                     }
 
                     try {
-                        Thread.sleep(rand.nextInt(5)); // simulate delay
+                        Thread.sleep(rand.nextInt(30) + 60); // simulate delay
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                     }
