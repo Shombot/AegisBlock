@@ -172,13 +172,12 @@ public class AND_Fiat_Shamir_AABProverBasicDLSchnorrANDExample {
 		
 		CryptoData publicInputs;
 		{
-			CryptoDataArray[] pub = new CryptoDataArray[n];
-			for(int i = 0; i < n; i++) {
-				CryptoData[] inner = new CryptoData[1];
-				inner[0] = new BigIntData(y[i]);
-				pub[i] = new CryptoDataArray(inner);
+			CryptoData[] pub = new CryptoData[n];
+			for (int i = 0; i < n; i++) {
+			    pub[i] = new BigIntData(y[i]);
 			}
 			publicInputs = new CryptoDataArray(pub);
+
 		}
 		
 		//Prover will create secrets section
@@ -217,14 +216,20 @@ public class AND_Fiat_Shamir_AABProverBasicDLSchnorrANDExample {
 		
 		
 		CryptoData env;	
-		CryptoData[] envTemp = new CryptoDataArray[n];
 		{
+			CryptoData[] envArr = new CryptoData[n];
 			BigInteger[] inner = new BigInteger[] {p, g};
-			for(int i = 0; i < n; i++) {
-				envTemp[i] = new CryptoDataArray(inner);
+			for (int i = 0; i < n; i++) {
+			    envArr[i] = new CryptoDataArray(inner);
 			}
-			env = new CryptoDataArray(envTemp);
+			env = new CryptoDataArray(envArr);
+
 		}
+		
+
+
+
+
 		
 		
 		
@@ -238,11 +243,15 @@ public class AND_Fiat_Shamir_AABProverBasicDLSchnorrANDExample {
 		proof.trueZKProve(publicInputs, secrets, env, commEnv, in, out);
 		*/ 
 		
-		CryptoData[] transcript = proof.proveFiatShamir(publicInputs, secrets, env);
-		
-		//System.out.println(transcript[0]);
-		
-		return transcript;
+		CryptoData[] shortArr = proof.proveFiatShamir(publicInputs, secrets, env); // returns {a, z}
+        
+        // Build a new array: {publicInput, a, z, environment}
+        CryptoData[] combined = new CryptoData[shortArr.length + 2];
+        System.arraycopy(shortArr, 0, combined, 1, shortArr.length);
+        combined[0] = publicInputs;
+        combined[shortArr.length + 1] = env;
+        
+        return combined;
 		
 		/*out.writeObject(transcript);
 		out.flush();

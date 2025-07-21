@@ -78,6 +78,16 @@ public class OR_Fiat_Shamir_AADProverBasicECSchnorrORExample {
         Arrays.fill(envTemp, commonEnv);
         CryptoData env = new CryptoDataArray(envTemp);
 
-        return proof.proveFiatShamir(publicInputs, secrets, env);
+        
+        
+        CryptoData[] shortArr = proof.proveFiatShamir(publicInputs, secrets, env); // returns {a, z}
+        
+        // Build a new array: {publicInput, a, z, environment}
+        CryptoData[] combined = new CryptoData[shortArr.length + 2];
+        System.arraycopy(shortArr, 0, combined, 1, shortArr.length);
+        combined[0] = publicInputs;
+        combined[shortArr.length + 1] = env;
+        
+        return combined;
     }
 }

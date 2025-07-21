@@ -25,22 +25,22 @@ public class BlockHeader {
 	
 	//maybe add a link to the patient and hospital
 	public String ptrRegular; //hash | BlockNode.toString()
-	public CryptoData[] ZKPPatient;
-	public CryptoData[] ZKPHospital;
+	public CryptoData[][] ZKPPatient;
+	public CryptoData[][] ZKPHospital;
 	public Date date;
 	public int prevBlock;
 	public String patientSign;
 	public String hospitalSign; 
 
 	//There is no ptrRegular since we add this when we are mining
-	public BlockHeader(CryptoData[] ZKPPatient, CryptoData[] ZKPHospital, int prevBlock, String patientSign, String hospitalSign) {
+	public BlockHeader(CryptoData[][] ZKPPatient, CryptoData[][] ZKPHospital, int prevBlock, String patientSign, String hospitalSign) {
 		this(ZKPPatient, ZKPHospital, prevBlock);
 		this.patientSign = patientSign;
 		this.hospitalSign = hospitalSign;
 	}
 	
 	//Does NOT sign for patients and hospitals
-	public BlockHeader(CryptoData[] ZKPPatient, CryptoData[] ZKPHospital, int prevBlock) {
+	public BlockHeader(CryptoData[][] ZKPPatient, CryptoData[][] ZKPHospital, int prevBlock) {
 		this.ZKPPatient = ZKPPatient;
 		this.ZKPHospital = ZKPHospital;
 		date = new Date();
@@ -55,19 +55,19 @@ public class BlockHeader {
 		this.ptrRegular = ptrRegular;
 	}
 
-	public CryptoData[] getZKPPatient() {
+	public CryptoData[][] getZKPPatient() {
 		return ZKPPatient;
 	}
 
-	public void setZKPPatient(CryptoData[] ZKPPatient) {
+	public void setZKPPatient(CryptoData[][] ZKPPatient) {
 		this.ZKPPatient = ZKPPatient;
 	}
 
-	public CryptoData[] getZKPHospital() {
+	public CryptoData[][] getZKPHospital() {
 		return ZKPHospital;
 	}
 
-	public void setZKPHospital(CryptoData[] ZKPHospital) {
+	public void setZKPHospital(CryptoData[][] ZKPHospital) {
 		this.ZKPHospital = ZKPHospital;
 	}
 	

@@ -202,7 +202,16 @@ public class NetworkSimulator {
                 
                 
                 // Attempt verification ONCE — only nodes that pass will propagate their ID
-                boolean verified = block.verifyBlockNode();
+                boolean verified;
+                while(true) {
+                	try {
+                		verified = block.verifyBlockNode();
+                		break;
+                	} catch(Exception e) {
+                		e.printStackTrace();
+                	}
+                }
+                
                 if (!verified) return;
 
                 // Add own signature if verified

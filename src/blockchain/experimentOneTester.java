@@ -10,14 +10,13 @@ public class experimentOneTester {
 		int numPatients = 1_000_000;
 		int numBlocks = 1; //number of blocks we are generating
 		
+
 		for(int i = 0; i < 5; i++) {
-			
 			//takes generates about 3000 a second, doing the 50M test case would take about 5 hours. overhead now is less than a second
 			//earlier when generating blocks manually, it could do about 13 a second, or about 5-6 weeks (1200 hours)
 			BlockChain.numHospitals = numHospitals;
 			BlockChain.numPatients = numPatients;
 			
-	
 			//This is where we start measuring the time
 			System.gc();
 			long startBlockChain = System.nanoTime();

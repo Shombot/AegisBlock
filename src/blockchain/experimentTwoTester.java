@@ -7,9 +7,9 @@ public class experimentTwoTester {
 		long startExperiment = System.nanoTime();
 		int numHospitals = 5;
 		int numPatients = 5;
-		int blocksBefore = 1;
-		int blocksAfter = 8;
-		int numBlocks = blocksBefore + blocksAfter + 1;
+		int numBlocks = 20;
+		int blocksBefore = numBlocks / 2;
+		int blocksAfter = (numBlocks % 2 == 0) ? (numBlocks / 2) - 1 : (numBlocks / 2);
 		int numNodes = 600;
 		double maliciousPercentage = 0;
 		NetworkSimulator verificationOne = new NetworkSimulator();

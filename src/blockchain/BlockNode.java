@@ -1,10 +1,25 @@
 package blockchain;
 
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.UUID;
 
+import org.bouncycastle.jce.ECNamedCurveTable;
+import org.bouncycastle.math.ec.ECCurve;
+import org.bouncycastle.math.ec.ECPoint;
+
 import examples.AND_Fiat_Shamir_AABProverBasicDLSchnorrANDExample;
 import examples.OR_Fiat_Shamir_AADProverBasicECSchnorrORExample;
+import zero_knowledge_proofs.ArraySizesDoNotMatchException;
+import zero_knowledge_proofs.DLSchnorrProver;
+import zero_knowledge_proofs.ECSchnorrProver;
+import zero_knowledge_proofs.MultipleTrueProofException;
+import zero_knowledge_proofs.NoTrueProofException;
+import zero_knowledge_proofs.ZKPProtocol;
+import zero_knowledge_proofs.ZeroKnowledgeAndProver;
+import zero_knowledge_proofs.ZeroKnowledgeOrProver;
 import zero_knowledge_proofs.CryptoData.CryptoData;
 import zero_knowledge_proofs.CryptoData.CryptoDataArray;
 
@@ -50,8 +65,8 @@ public class BlockNode {
 		int i_real_patient;
 		int n_hospital;
 		int i_real_hospital;
-		CryptoData[] key1 = new CryptoDataArray[2];
-		CryptoData[] key2 = new CryptoDataArray[2];
+		CryptoData[][] key1 = new CryptoData[2][4];
+		CryptoData[][] key2 = new CryptoData[2][4];
 		
 		//patient proof
 		n_patient = BlockChain.numPatients; //patients is the OR
@@ -59,10 +74,10 @@ public class BlockNode {
 		
 		//System.out.println(n_patient + " " + i_real_patient);
 		CryptoData[] patientOr = OR_Fiat_Shamir_AADProverBasicECSchnorrORExample.prover(n_patient, i_real_patient);
-		key1[0] = new CryptoDataArray(patientOr);
+		key1[0] = patientOr;
 		
 		CryptoData[] patientAND = AND_Fiat_Shamir_AABProverBasicDLSchnorrANDExample.prover(args, 2); //AND	call;
-		key1[1] = new CryptoDataArray(patientAND);
+		key1[1] = patientAND;
 		//System.out.println("patient proof works");
 		
 		
@@ -73,23 +88,21 @@ public class BlockNode {
 		
 		//System.out.println(n_hospital + " " + i_real_hospital);
 		CryptoData[] hospitalOr = OR_Fiat_Shamir_AADProverBasicECSchnorrORExample.prover(n_hospital, i_real_hospital);
-		key2[0] = new CryptoDataArray(hospitalOr);
+		key2[0] = hospitalOr;
 		
-		CryptoData[] hospitalAND = AND_Fiat_Shamir_AABProverBasicDLSchnorrANDExample.prover(args, 2);; //AND call;
-		key2[1] = new CryptoDataArray(hospitalAND);
+		CryptoData[] hospitalAND = AND_Fiat_Shamir_AABProverBasicDLSchnorrANDExample.prover(args, 2); //AND call;
+		key2[1] = hospitalAND;
 		//System.out.println("hospital proof works");
 		
-		hash = getHash(); //makes sure the hash cannot be null
+		hash = generateHash(); //makes sure the hash cannot be null
 		String patientSign = BlockChain.signData(hash, this.getPatient().getPrivKey());
 		String hospitalSign = BlockChain.signData(hash, this.getHospital().getPrivKey());
 		
 		header = new BlockHeader(key1, key2, prevBlock, patientSign, hospitalSign);
 	}
-	
-	//WRITE THIS FUNCTION
-	public boolean verifyBlockNode() {
+
+	public boolean verifyBlockNode() throws Exception {
 		BlockHeader header = this.getHeader();
-		BlockBody body = this.getBody();
 		
 		//hospital signature is valid
 		if(!BlockChain.verifySignature(this.hash, header.getHospitalSign(), this.getHospital().getPubKey())) {
@@ -103,14 +116,62 @@ public class BlockNode {
 			return false;
 		}
 		
-		//hash is correctly done
-		if(hash != this.getHash()) {
-			System.out.println("Hash does not match");
+		
+		
+		
+		
+		/*
+		 * verify ZKPs down here
+		 */
+		
+		//ZKPProtocol proofAND;
+		ZKPProtocol[] inners;
+		
+		//setup patient OR
+		ZKPProtocol[] innerProtocolsPatient = new ZKPProtocol[BlockChain.numPatients];
+		Arrays.setAll(innerProtocolsPatient, i -> new ECSchnorrProver());
+		ECPoint gUnwrappedP = ECNamedCurveTable.getParameterSpec("secp256k1").getG();
+        ECCurve cUnwrappedP = gUnwrappedP.getCurve();
+        BigInteger orderP = cUnwrappedP.getOrder();
+		ZKPProtocol proof = new ZeroKnowledgeOrProver(innerProtocolsPatient, orderP);
+
+		CryptoData[] patientOR = header.getZKPPatient()[0];
+		if (!proof.verifyFiatShamir(patientOR[0], patientOR[1], patientOR[2], patientOR[3])) {
+			System.out.println("ZKP Patient OR does not match");
 			return false;
 		}
 		
-		if(header.getPrevBlock() < -1 || header.getPrevBlock() >= BlockChain.ledger.size()) {
-			System.out.println("Prev block is invalid");
+		//setup for patient AND
+		inners = new ZKPProtocol[BlockChain.numPatients];
+		for(int i = 0; i < BlockChain.numPatients; i++) {
+			inners[i] = new DLSchnorrProver();
+		}
+		//proofAND = new ZeroKnowledgeAndProver(inners);
+		
+		CryptoData[] patientAND = header.getZKPPatient()[0];
+		if (!proof.verifyFiatShamir(patientAND[0], patientAND[1], patientAND[2], patientAND[3])) {
+			System.out.println("ZKP Patient AND does not match");
+			return false;
+		}
+		
+		//setup for hospital OR
+		ZKPProtocol[] innerProtocolsHospital = new ZKPProtocol[BlockChain.numHospitals];
+		Arrays.setAll(innerProtocolsHospital, i -> new ECSchnorrProver());
+		ECPoint gUnwrappedH = ECNamedCurveTable.getParameterSpec("secp256k1").getG();
+        ECCurve cUnwrappedH = gUnwrappedH.getCurve();
+        BigInteger orderH = cUnwrappedH.getOrder();
+		proof = new ZeroKnowledgeOrProver(innerProtocolsHospital, orderH);
+		
+		CryptoData[] hospitalOR = header.getZKPHospital()[0];
+		if (!proof.verifyFiatShamir(hospitalOR[0], hospitalOR[1], hospitalOR[2], hospitalOR[3])) {
+			System.out.println("ZKP Hospital OR does not match");
+			return false;
+		}
+		
+		
+		CryptoData[] hospitalAND = header.getZKPHospital()[0];
+		if (!proof.verifyFiatShamir(hospitalAND[0], hospitalAND[1], hospitalAND[2], hospitalAND[3])) {
+			System.out.println("ZKP Hospital AND does not match");
 			return false;
 		}
 		
@@ -118,21 +179,6 @@ public class BlockNode {
 		return true;
 	}
 
-	public BlockHeader getHeader() {
-		return header;
-	}
-
-	public void setHeader(BlockHeader header) {
-		this.header = header;
-	}
-
-	public BlockBody getBody() {
-		return body;
-	}
-
-	public void setBody(BlockBody body) {
-		this.body = body;
-	}
 
 	public String getHash() {
 		if(hash == null) {
@@ -153,7 +199,7 @@ public class BlockNode {
 		if(prevBlock == -1) {
 			prevHashPtr = UUID.randomUUID().toString();
 		} else {
-			prevHashPtr = BlockChain.ledger.get(prevBlock).getHash(); 
+			prevHashPtr = BlockChain.ledger.get(prevBlock).getSafeHash(); 
 		}
 		
 		hash = this.getBody().getSymmetricString() + this.getBody().getPatient().getPtrData()
@@ -166,6 +212,30 @@ public class BlockNode {
 		return hash;
 	}
 	
+	public BlockHeader getHeader() {
+		return header;
+	}
+
+	public void setHeader(BlockHeader header) {
+		this.header = header;
+	}
+
+	public BlockBody getBody() {
+		return body;
+	}
+
+	public void setBody(BlockBody body) {
+		this.body = body;
+	}
+
+	public void setHash(String hash) {
+		this.hash = hash;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
+
 	public String getSafeHash() {
 		return safeHash;
 	}
