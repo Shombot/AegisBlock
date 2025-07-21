@@ -26,11 +26,12 @@ import zero_knowledge_proofs.CryptoData.CryptoDataArray;
 */
 
 public class BlockNode {
-	private BlockHeader header;
-	private BlockBody body;
-	private String hash = null; //H(H(header) + H(body))
+	public BlockHeader header;
+	public BlockBody body;
+	private String hash = null; //H(symK || ptr(D) || H(D) || H(n-1))
 	private String salt;
-	int prevBlock;
+	public String safeHash; //H(H(n) || salt)
+	public int prevBlock;
 	
 	public BlockNode(String conditionCodes, String data, String ptrData, String hashPtrPrevBlock, int prevBlock) throws Exception {
 		while(true) {
@@ -83,21 +84,38 @@ public class BlockNode {
 		String hospitalSign = BlockChain.signData(hash, this.getHospital().getPrivKey());
 		
 		header = new BlockHeader(key1, key2, prevBlock, patientSign, hospitalSign);
+	}
+	
+	//WRITE THIS FUNCTION
+	public boolean verifyBlockNode() {
+		BlockHeader header = this.getHeader();
+		BlockBody body = this.getBody();
+		
+		//hospital signature is valid
+		if(!BlockChain.verifySignature(this.hash, header.getHospitalSign(), this.getHospital().getPubKey())) {
+			System.out.println("Hospital signature does not match");
+			return false;
+		}
+		
+		//patient signature is valid
+		if(!BlockChain.verifySignature(this.hash, header.getPatientSign(), this.getPatient().getPubKey())) {
+			System.out.println("Patient signature does not match");
+			return false;
+		}
+		
+		//hash is correctly done
+		if(hash != this.getHash()) {
+			System.out.println("Hash does not match");
+			return false;
+		}
+		
+		if(header.getPrevBlock() < -1 || header.getPrevBlock() >= BlockChain.ledger.size()) {
+			System.out.println("Prev block is invalid");
+			return false;
+		}
 		
 		
-		
-		/*
-		
-		String headerHash = BlockChain.hash(header.toString());
-		String bodyHash = BlockChain.hash(body.toString());
-		
-		hash = BlockChain.hash(headerHash + bodyHash);
-		
-		if(BlockChain.ledger.size() == 0) {
-			header.setPtrRegular(this.getHashPointer()); //hash this block itself if this is the first one 
-		} else {
-			header.setPtrRegular(BlockChain.ledger.getLast().getHashPointer());
-		} */
+		return true;
 	}
 
 	public BlockHeader getHeader() {
@@ -118,15 +136,15 @@ public class BlockNode {
 
 	public String getHash() {
 		if(hash == null) {
-			hash = generateHashPointer();
+			hash = generateHash();
 		}
 		return hash;
 	}
 	
 	/*
-	 * Hash(n) = Hash(symK + ptr(data) + Hash(n - 1) + salt);
+	 * Hash(n) = Hash(symK + ptr(data) + Hash(D) + Hash(n - 1));
 	 */
-	public String generateHashPointer() {
+	public String generateHash() {
 		if(hash != null) {
 			return hash;
 		}
@@ -138,14 +156,24 @@ public class BlockNode {
 			prevHashPtr = BlockChain.ledger.get(prevBlock).getHash(); 
 		}
 		
-		String preHash = this.getBody().getSymmetricString() + this.getBody().getPatient().getPtrData() + prevHashPtr;
+		hash = this.getBody().getSymmetricString() + this.getBody().getPatient().getPtrData()
+				+ this.getBody().getHashData() + prevHashPtr;
+		
 		salt = BlockChain.generateRandomSHA256();
-		String hash = preHash + salt;
 		
 		hash = BlockChain.hash(hash);
+		setSafeHash(hash, salt);
 		return hash;
 	}
 	
+	public String getSafeHash() {
+		return safeHash;
+	}
+
+	public void setSafeHash(String hash, String salt) {
+		this.safeHash = BlockChain.hash(hash + salt);
+	}
+
 	public Patient getPatient() {
 		return getBody().getPatient();
 	}
@@ -174,19 +202,11 @@ public class BlockNode {
 		return salt;
 	}
 
-	public void setSalt(String salt) {
-		this.salt = salt;
-	}
-
 	public int getPrevBlock() {
 		return prevBlock;
 	}
 
 	public void setPrevBlock(int prevBlock) {
 		this.prevBlock = prevBlock;
-	}
-
-	public void setHash(String hash) {
-		this.hash = hash;
 	}
 }

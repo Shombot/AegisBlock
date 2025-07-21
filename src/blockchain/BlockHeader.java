@@ -33,11 +33,11 @@ public class BlockHeader {
 	public String hospitalSign; 
 
 	//There is no ptrRegular since we add this when we are mining
-		public BlockHeader(CryptoData[] ZKPPatient, CryptoData[] ZKPHospital, int prevBlock, String patientSign, String hospitalSign) {
-			this(ZKPPatient, ZKPHospital, prevBlock);
-			this.patientSign = patientSign;
-			this.hospitalSign = hospitalSign;
-		}
+	public BlockHeader(CryptoData[] ZKPPatient, CryptoData[] ZKPHospital, int prevBlock, String patientSign, String hospitalSign) {
+		this(ZKPPatient, ZKPHospital, prevBlock);
+		this.patientSign = patientSign;
+		this.hospitalSign = hospitalSign;
+	}
 	
 	//Does NOT sign for patients and hospitals
 	public BlockHeader(CryptoData[] ZKPPatient, CryptoData[] ZKPHospital, int prevBlock) {
@@ -92,6 +92,18 @@ public class BlockHeader {
 	}
 	
 	public void sethospitalSign(String hospitalSign) {
+		this.hospitalSign = hospitalSign;
+	}
+
+	public int getPrevBlock() {
+		return prevBlock;
+	}
+
+	public void setPrevBlock(int prevBlock) {
+		this.prevBlock = prevBlock;
+	}
+
+	public void setHospitalSign(String hospitalSign) {
 		this.hospitalSign = hospitalSign;
 	}
 }

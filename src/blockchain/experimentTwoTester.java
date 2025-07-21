@@ -7,10 +7,11 @@ public class experimentTwoTester {
 		long startExperiment = System.nanoTime();
 		int numHospitals = 5;
 		int numPatients = 5;
-		int blocksBefore = 10;
-		int blocksAfter = 89;
+		int blocksBefore = 1;
+		int blocksAfter = 8;
 		int numBlocks = blocksBefore + blocksAfter + 1;
-		int numNodes = 12000;
+		int numNodes = 600;
+		double maliciousPercentage = 0;
 		NetworkSimulator verificationOne = new NetworkSimulator();
 		NetworkSimulator verificationTwo = new NetworkSimulator();
 		
@@ -26,13 +27,13 @@ public class experimentTwoTester {
 		ResearcherBlockOne blockOne = new ResearcherBlockOne(researcher, BlockChain.ledger.get(blocksBefore), blocksBefore, blocksAfter);
 		researcher.firstBlocks.add(blockOne);
 		
-		verificationOne.setupNodes(numNodes);
+		verificationOne.setupNodes(numNodes, maliciousPercentage);
 		verificationOne.simulateVerifyBlockOne(blockOne);
 		
 		ResearcherBlockTwo blockTwo = new ResearcherBlockTwo(blockOne, blocksBefore, blocksAfter);
 		researcher.secondBlocks.add(blockTwo);
 		
-		verificationTwo.setupNodes(numNodes);
+		verificationTwo.setupNodes(numNodes, maliciousPercentage);
 		verificationTwo.simulateVerifyBlockTwo(blockTwo);
 		
 		BlockNode[] blocksArr = new BlockNode[blockTwo.getNumBlocks()];
@@ -51,18 +52,5 @@ public class experimentTwoTester {
 		
 		System.out.println("The researcher access process for encrypting " + numBlocks + " blocks with " + numNodes + " hospitals in the system is "
 				+ elapsedResearcherAccess + " seconds, while the whole experiment took " + elapsedExperiment + " seconds.");
-		
-		/*
-		 * long startExperiment = System.nanoTime();
-		long startBlockChain = System.nanoTime();
-		BlockChain bc = new BlockChain(numBlocks); //change nanme of testing zkp
-		long end = System.nanoTime();
-		
-		double elapsedAddBlock = (end - startBlockChain) / 1000000000.0;
-		double elapsedExperiment = (end - startExperiment) / 1000000000.0;
-		
-		System.out.println("The block creation process for " + numPatients + " patients and " + numHospitals + " hospitals in the system to add " + 
-				numBlocks + " blocks is " + elapsedAddBlock + " seconds, while the whole experiment took " + elapsedExperiment + " seconds.");
-		*/
 	}
 }

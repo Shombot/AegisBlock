@@ -10,15 +10,17 @@ public class Node {
     private final Set<Integer> trueSignatures = ConcurrentHashMap.newKeySet();
     private volatile boolean completed = false;
     private volatile long timeCompleted = -1;
+    private final boolean malicious;
 
-    public Node(int id, int threshold) {
+    public Node(int id, int threshold, boolean malicious) {
         this.id = id;
         this.signatureThreshold = threshold;
+        this.malicious = malicious;
     }
 
     // Thread-safe signature processing
     public synchronized void receiveValidSignature(int signerId, long timeSinceStart) {
-        if (completed) return;
+        if (completed || malicious) return;
 
         trueSignatures.add(signerId);
         if (trueSignatures.size() >= signatureThreshold && !completed) {
@@ -38,6 +40,10 @@ public class Node {
     // Defensive copy to avoid external modification
     public Set<Integer> getKnownTrueSignatures() {
         return new HashSet<>(trueSignatures);
+    }
+    
+    public boolean getMalicious() {
+    	return malicious;
     }
 
     public int getId() {
