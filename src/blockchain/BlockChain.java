@@ -1,6 +1,9 @@
 package blockchain;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
@@ -13,8 +16,12 @@ import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.Signature;
 import java.security.SignatureException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.crypto.BadPaddingException;

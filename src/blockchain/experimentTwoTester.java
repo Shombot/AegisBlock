@@ -5,52 +5,41 @@ import java.util.ArrayList;
 public class experimentTwoTester {
 	public static void main(String[] args) throws InterruptedException {
 		long startExperiment = System.nanoTime();
+		int numNodes = 1_000;
+		double maliciousPercentage = 40;
 		int numHospitals = 5;
 		int numPatients = 5;
-		int numBlocks = 20;
-		int blocksBefore = numBlocks / 2;
-		int blocksAfter = (numBlocks % 2 == 0) ? (numBlocks / 2) - 1 : (numBlocks / 2);
-		int numNodes = 600;
-		double maliciousPercentage = 0;
-		NetworkSimulator verificationOne = new NetworkSimulator();
-		NetworkSimulator verificationTwo = new NetworkSimulator();
+		int numBlocks = 1;
 		
+		NetworkSimulator verification = new NetworkSimulator();
 		BlockChain.numHospitals = numHospitals;
 		BlockChain.numPatients = numPatients;
-		BlockChain bc = new BlockChain(numBlocks);
-		
-		Researcher researcher = new Researcher();
-		
-		
-		System.gc();
-		long startResearcherAccess = System.nanoTime();
-		ResearcherBlockOne blockOne = new ResearcherBlockOne(researcher, BlockChain.ledger.get(blocksBefore), blocksBefore, blocksAfter);
-		researcher.firstBlocks.add(blockOne);
-		
-		verificationOne.setupNodes(numNodes, maliciousPercentage);
-		verificationOne.simulateVerifyBlockOne(blockOne);
-		
-		ResearcherBlockTwo blockTwo = new ResearcherBlockTwo(blockOne, blocksBefore, blocksAfter);
-		researcher.secondBlocks.add(blockTwo);
-		
-		verificationTwo.setupNodes(numNodes, maliciousPercentage);
-		verificationTwo.simulateVerifyBlockTwo(blockTwo);
-		
-		BlockNode[] blocksArr = new BlockNode[blockTwo.getNumBlocks()];
-		for(int i = 0; i < blockTwo.getNumBlocks(); i++) {
-			blocksArr[i] = BlockChain.ledger.get(i);
+		BlockChain chain = new BlockChain(numBlocks);
+		BlockNode node;
+		while(true) {
+			try {
+				node = new BlockNode(BlockChain.generateRandomSHA256(), BlockChain.generateRandomSHA256(),
+						BlockChain.generateRandomSHA256(), BlockChain.generateRandomSHA256(), 0);
+				break;
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
-		ResearcherBlockThree plaintextBlockThree = new ResearcherBlockThree(blockTwo, blocksArr);
-		researcher.thirdBlocks.add(plaintextBlockThree);
-		
-		ArrayList<ResearcherBlockInformation> encryptedBlockThreeList = plaintextBlockThree.generateEncryption();
-		long end = System.nanoTime();
-		
-		double elapsedResearcherAccess = (end - startResearcherAccess) / 1000000000.0;
-		double elapsedExperiment = (end - startExperiment) / 1000000000.0;
-		
-		System.out.println("The researcher access process for encrypting " + numBlocks + " blocks with " + numNodes + " hospitals in the system is "
-				+ elapsedResearcherAccess + " seconds, while the whole experiment took " + elapsedExperiment + " seconds.");
+		for(int i = 0; i < 6; i++) {
+			System.gc();
+			long startHospitalConsensus = System.nanoTime();
+			verification.setupNodes(numNodes, maliciousPercentage);
+			verification.simulateVerifyBlockNode(node);
+			long end = System.nanoTime();
+			
+			
+			double elapsedHospitalAccess = (end - startHospitalConsensus) / 1000000000.0;
+			double elapsedExperiment = (end - startExperiment) / 1000000000.0;
+			
+			System.out.println("The hospital consensus protocol with " + numNodes  + " hospitals took " + elapsedHospitalAccess + " seconds, "
+					+ "while the whole experiment took " + elapsedExperiment + " seconds.");
+			numNodes += 1_000;
+		}
 	}
 }

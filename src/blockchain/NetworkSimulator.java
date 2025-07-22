@@ -187,6 +187,9 @@ public class NetworkSimulator {
 
     }
     
+    /*
+     * Number of Nodes needs to be >= 11
+     */
     public void simulateVerifyBlockNode(BlockNode block) throws InterruptedException {
     	completedCount.set(0);
     	completionTimes.clear();
@@ -263,7 +266,7 @@ public class NetworkSimulator {
         executor.shutdown();
         executor.awaitTermination(30, TimeUnit.SECONDS);
 
-        System.out.println("First " + THRESHOLD + " nodes completed verifying Block 2.");
+        System.out.println("First " + THRESHOLD + " nodes completed verifying Patient Block.");
         if (completionTimes.size() >= THRESHOLD) {
             System.out.printf("Node %d completed at %.3f seconds\n", THRESHOLD - 1, completionTimes.get(THRESHOLD - 1) / 1_000_000_000.0);
         } else {

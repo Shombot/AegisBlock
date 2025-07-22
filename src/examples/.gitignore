@@ -20,3 +20,9 @@
 /PaillierRSAProofTest.class
 /Working_AADProverBasicECSchnorrORExample.class
 /Working_AADVerifierBasicECSchnorrORExample.class
+/AND_Fiat_Shamir_AABProverBasicDLSchnorrANDExample.class
+/Fiat_Shamir_AADProverBasicECSchnorrORExample.class
+/Fiat_Shamir_AADVerifierBasicECSchnorrORExample.class
+/OR_Fiat_Shamir_AADProverBasicECSchnorrORExample.class
+/Returning_AADProverBasicECSchnorrORExample.class
+/Returning_AADVerifierBasicECSchnorrORExample.class

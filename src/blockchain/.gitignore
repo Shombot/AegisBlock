@@ -4,3 +4,14 @@
 /BlockNode.class
 /Hospital.class
 /Patient.class
+/NetworkSimulator.class
+/Node.class
+/Researcher.class
+/ResearcherBlockInformation.class
+/ResearcherBlockOne.class
+/ResearcherBlockThree.class
+/ResearcherBlockTwo.class
+/experimentOneTester.class
+/experimentThreeTester.class
+/experimentTwoTester.class
+/Agent.class
