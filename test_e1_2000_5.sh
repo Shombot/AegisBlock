@@ -1,5 +1,6 @@
-#!/bin/bash --login
+#!/bin/bash
 
+#SBATCH --partition=gpu-l40
 #SBATCH --time=1-00:00:00   # walltime 24hr
 #SBATCH --ntasks-per-node=4 # number of processor cores (i.e. tasks)
 #SBATCH --nodes=2   # number of nodes
