@@ -16,7 +16,7 @@ import java.util.concurrent.*;
 
 public class OR_Fiat_Shamir_AADProverBasicECSchnorrORExample {
 
-    public static CryptoData[] prover(int n, int iReal) throws Exception {
+    public CryptoData[] prover(int n, int iReal) throws Exception {
         SecureRandom rand = new SecureRandom();
 
         // Setup curve

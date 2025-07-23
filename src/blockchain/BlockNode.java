@@ -68,29 +68,33 @@ public class BlockNode {
 		CryptoData[][] key1 = new CryptoData[2][4];
 		CryptoData[][] key2 = new CryptoData[2][4];
 		
+		OR_Fiat_Shamir_AADProverBasicECSchnorrORExample orPatient = new OR_Fiat_Shamir_AADProverBasicECSchnorrORExample();
+		AND_Fiat_Shamir_AABProverBasicDLSchnorrANDExample andPatient = new AND_Fiat_Shamir_AABProverBasicDLSchnorrANDExample();
+		
 		//patient proof
 		n_patient = BlockChain.numPatients; //patients is the OR
 		i_real_patient = (int) (Math.random() * n_patient);
 		
 		//System.out.println(n_patient + " " + i_real_patient);
-		CryptoData[] patientOr = OR_Fiat_Shamir_AADProverBasicECSchnorrORExample.prover(n_patient, i_real_patient);
+		CryptoData[] patientOr = orPatient.prover(n_patient, i_real_patient);
 		key1[0] = patientOr;
 		
-		CryptoData[] patientAND = AND_Fiat_Shamir_AABProverBasicDLSchnorrANDExample.prover(args, 2); //AND	call;
+		CryptoData[] patientAND = andPatient.prover(args, 2); //AND	call;
 		key1[1] = patientAND;
 		//System.out.println("patient proof works");
+
 		
-		
-		
+		OR_Fiat_Shamir_AADProverBasicECSchnorrORExample orHospital = new OR_Fiat_Shamir_AADProverBasicECSchnorrORExample();
+		AND_Fiat_Shamir_AABProverBasicDLSchnorrANDExample andHospital = new AND_Fiat_Shamir_AABProverBasicDLSchnorrANDExample();
 		//hospital proof
 		n_hospital = BlockChain.numHospitals; //hospitals is the OR
 		i_real_hospital = (int) (Math.random() * n_hospital);
 		
 		//System.out.println(n_hospital + " " + i_real_hospital);
-		CryptoData[] hospitalOr = OR_Fiat_Shamir_AADProverBasicECSchnorrORExample.prover(n_hospital, i_real_hospital);
+		CryptoData[] hospitalOr = orHospital.prover(n_hospital, i_real_hospital);
 		key2[0] = hospitalOr;
 		
-		CryptoData[] hospitalAND = AND_Fiat_Shamir_AABProverBasicDLSchnorrANDExample.prover(args, 2); //AND call;
+		CryptoData[] hospitalAND = andHospital.prover(args, 2); //AND call;
 		key2[1] = hospitalAND;
 		//System.out.println("hospital proof works");
 		

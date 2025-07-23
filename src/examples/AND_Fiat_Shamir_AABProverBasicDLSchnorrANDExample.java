@@ -40,7 +40,7 @@ import zero_knowledge_proofs.CryptoData.ECCurveData;
 import zero_knowledge_proofs.CryptoData.ECPointData;
 
 public class AND_Fiat_Shamir_AABProverBasicDLSchnorrANDExample {
-	public static CryptoData[] prover(String[] args, int n) throws IOException, ClassNotFoundException, MultipleTrueProofException, NoTrueProofException, ArraySizesDoNotMatchException {
+	public CryptoData[] prover(String[] args, int n) throws IOException, ClassNotFoundException, MultipleTrueProofException, NoTrueProofException, ArraySizesDoNotMatchException {
 		/*System.setProperty("javax.net.ssl.trustStore", "resources/Client_Truststore");
 		System.setProperty("javax.net.ssl.keyStore", "resources/Server_Keystore");
 		System.setProperty("javax.net.ssl.trustStorePassword", "test123");

@@ -1,6 +1,7 @@
 package blockchain;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.nio.file.Files;
@@ -15,7 +16,7 @@ import zero_knowledge_proofs.CryptoData.CryptoData;
 public class experimentOneTester {
 	public static void main(String[] args) {
 		long startExperiment = System.nanoTime();
-		int numHospitals = 2_000;
+		int numHospitals = 6_000;
 		int numPatients = 1_000_000;
 		int numBlocks = 1; //number of blocks we are generating
 		
@@ -42,26 +43,34 @@ public class experimentOneTester {
 			
 			int ZKPHospitalSize = 0;
 			int ZKPPatientSize = 0;
+					
 			for(int j = 0; j < 2; j++) {
-				for(int k = 0; k < 4; k++) {
-					try {
-						ObjectOutputStream oosH = new ObjectOutputStream(new FileOutputStream("ZKPHospital.ser"));
-					    oosH.writeObject(ZKPHospital[j][k]);
-					    ZKPHospitalSize += Files.size(Paths.get("ZKPHospital.ser"));
-					    
-					    ObjectOutputStream oosP = new ObjectOutputStream(new FileOutputStream("ZKPPatient.ser"));
-					    oosH.writeObject(ZKPPatient[j][k]);
-					    ZKPPatientSize += Files.size(Paths.get("ZKPPatient.ser"));
-					} catch(Exception e) {
-						//e.printStackTrace();
-					}
-				}
+			    for(int k = 0; k < 4; k++) {
+			        try {
+			            // Serialize hospital ZKP
+			            String nameHospital = "ZKPHospital_" + j + "_" + k + ".ser";
+			            try (ObjectOutputStream oosH = new ObjectOutputStream(new FileOutputStream(nameHospital))) {
+			                oosH.writeObject(ZKPHospital[j][k]);
+			            }
+			            ZKPHospitalSize += Files.size(Paths.get(nameHospital));
+
+			            // Serialize patient ZKP
+			            String namePatient = "ZKPPatient_" + j + "_" + k + ".ser";
+			            try (ObjectOutputStream oosP = new ObjectOutputStream(new FileOutputStream(namePatient))) {
+			                oosP.writeObject(ZKPPatient[j][k]);
+			            }
+			            ZKPPatientSize += Files.size(Paths.get(namePatient));
+			        } catch(Exception e) {
+			            //e.printStackTrace();
+			        }
+			    }
 			}
+
 	        
 			
 			System.out.println("The block creation process for " + numPatients + " patients and " + numHospitals + " hospitals in the system to add " + 
 					numBlocks + " blocks is " + elapsedAddBlock + " seconds, while the whole experiment took " + elapsedExperiment + " seconds. \nThe "
-							+ "ZKPHospital file size is " + ZKPHospitalSize + " bytes, while patient is " + ZKPPatientSize + " bytes.\n\n");
+							+ "ZKPPatient file size is " + ZKPPatientSize + " bytes, while hospital is " + ZKPHospitalSize + " bytes.\n\n");
 			
 			numPatients += 1_000_000;
 			System.gc();

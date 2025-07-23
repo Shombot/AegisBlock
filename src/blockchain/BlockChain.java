@@ -280,8 +280,6 @@ public class BlockChain {
 				continue;
 			}
 		}
-		patients.add(blockNode.getPatient());
-		hospitals.add(blockNode.getHospital());
 		return blockNode;
 	}
 }
