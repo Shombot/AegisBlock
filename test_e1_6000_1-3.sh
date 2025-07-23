@@ -14,4 +14,4 @@ export OMP_NUM_THREADS=$SLURM_CPUS_ON_NODE
 
 # LOAD MODULES, INSERT CODE, AND RUN YOUR PROGRAMS HERE
 module load openjdk/24.0.1
-java -jar e1_2000_1-3.jar # input code you want to compile
+java -jar e1_6000_1-3.jar # input code you want to compile
