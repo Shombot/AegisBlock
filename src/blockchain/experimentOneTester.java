@@ -20,8 +20,8 @@ public class experimentOneTester {
 		int numPatients = 1_000_000;
 		int numBlocks = 1; //number of blocks we are generating
 		
-
-		for(int i = 0; i < 5; i++) {
+		
+		for(int i = 0; i < 3; i++) {
 			//takes generates about 3000 a second, doing the 50M test case would take about 5 hours. overhead now is less than a second
 			//earlier when generating blocks manually, it could do about 13 a second, or about 5-6 weeks (1200 hours)
 			BlockChain.numHospitals = numHospitals;
@@ -35,8 +35,8 @@ public class experimentOneTester {
 			
 			double elapsedAddBlock = (end - startBlockChain) / 1000000000.0;
 			double elapsedExperiment = (end - startExperiment) / 1000000000.0;
-
-
+	
+	
 			BlockHeader header = BlockChain.ledger.get(BlockChain.ledger.size() - 1).getHeader();
 			CryptoData[][] ZKPHospital = header.getZKPHospital();
 			CryptoData[][] ZKPPatient = header.getZKPPatient();
@@ -53,7 +53,7 @@ public class experimentOneTester {
 			                oosH.writeObject(ZKPHospital[j][k]);
 			            }
 			            ZKPHospitalSize += Files.size(Paths.get(nameHospital));
-
+	
 			            // Serialize patient ZKP
 			            String namePatient = "ZKPPatient_" + j + "_" + k + ".ser";
 			            try (ObjectOutputStream oosP = new ObjectOutputStream(new FileOutputStream(namePatient))) {
@@ -65,16 +65,15 @@ public class experimentOneTester {
 			        }
 			    }
 			}
-
+	
 	        
 			
 			System.out.println("The block creation process for " + numPatients + " patients and " + numHospitals + " hospitals in the system to add " + 
 					numBlocks + " blocks is " + elapsedAddBlock + " seconds, while the whole experiment took " + elapsedExperiment + " seconds. \nThe "
 							+ "ZKPPatient file size is " + ZKPPatientSize + " bytes, while hospital is " + ZKPHospitalSize + " bytes.\n\n");
-			
-			numPatients += 1_000_000;
 			System.gc();
-		}
+			numPatients += 1_000_000;
+	}
 			
 		
 		

@@ -10,8 +10,8 @@ public class experimentThreeTester {
 		int numBlocks = 20;
 		int blocksBefore = numBlocks / 2;
 		int blocksAfter = (numBlocks % 2 == 0) ? (numBlocks / 2) - 1 : (numBlocks / 2);
-		int numNodes = 6_000;
-		double maliciousPercentage = 50;
+		int numNodes = 12_000;
+		double maliciousPercentage = 0;
 		NetworkSimulator verificationOne = new NetworkSimulator();
 		NetworkSimulator verificationTwo = new NetworkSimulator();
 		
